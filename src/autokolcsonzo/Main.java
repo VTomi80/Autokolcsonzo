@@ -1,17 +1,21 @@
 package autokolcsonzo;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import autokolcsonzo.dao.AutoDAO;
+import autokolcsonzo.model.Auto;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Teszteljük az adatbázishoz való kapcsolódást és a DAO műveleteket
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        AutoDAO autoDAO = new AutoDAO();
+
+        // Teszt: új autó hozzáadása
+        Auto auto = new Auto(0, "Toyota Corolla", "ABC-123", 12000, 5, 1000, "Benzin", true, true);
+        autoDAO.hozzaadAuto(auto);
+        System.out.println("Autó hozzáadva.");
+
+        // Teszt: összes autó lekérdezése
+        System.out.println("Összes autó:");
+        autoDAO.listazAutokat().forEach(System.out::println);
     }
 }
