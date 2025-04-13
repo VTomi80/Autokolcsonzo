@@ -10,6 +10,8 @@ public class Berles {
     private int napok;
     private int ar;
 
+    //Berles osztaly
+
     public Berles(int id, Auto auto, Berlo berlo, LocalDate kezdet, int napok, int ar) {
         this.id = id;
         this.auto = auto;

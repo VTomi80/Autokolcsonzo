@@ -5,6 +5,7 @@ public class Berlo {
     private String nev;
     private String jogositvanySzam;
     private String telefonszam;
+    //Berlo osztály
 
     public Berlo(int id, String nev, String jogositvanySzam, String telefonszam) {
         this.id = id;
@@ -13,7 +14,7 @@ public class Berlo {
         this.telefonszam = telefonszam;
     }
 
-    // Getterek és setterek
+    // Getterek, setterek
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

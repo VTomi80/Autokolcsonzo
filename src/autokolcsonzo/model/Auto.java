@@ -11,6 +11,7 @@ public class Auto {
     private Boolean billent;
     private boolean elerheto;
 
+    //Auto osztály
     public Auto(int id, String tipus, String rendszam, int dij, Integer utasSzam,
                 Integer teherbiras, String uzemanyag, Boolean billent, boolean elerheto) {
         this.id = id;

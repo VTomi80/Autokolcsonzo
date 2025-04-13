@@ -10,10 +10,11 @@ import java.util.List;
 public class AutoDAO {
 
     public void hozzaadAuto(Auto auto) {
+        //új autó hozzáadása
         String sql = "INSERT INTO autok (tipus, rendszam, dij, utas_szam, teherbiras, uzemanyag, billent, elerheto) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DBUtil.getConnection();
+        try (Connection conn = DBUtil.getConnection(); //kapcsolódás az adatbázishoz a DBUtil osztály getConnection metódusával
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, auto.getTipus());
@@ -33,16 +34,16 @@ public class AutoDAO {
         }
     }
 
-    public List<Auto> listazAutokat() {
-        List<Auto> autok = new ArrayList<>();
-        String sql = "SELECT * FROM autok";
+    public List<Auto> listazAutok() { //Autó objektumok elehelyézse a listában
+        List<Auto> autok = new ArrayList<>(); //Készítek egy listát, aminek minden eleme egy Auto objektum
+        String sql = "SELECT * FROM autok"; //sql query definiálása: minden rekordot kiolvasunk az autók táblából
 
-        try (Connection conn = DBUtil.getConnection();
+        try (Connection conn = DBUtil.getConnection(); //kapcsolódás az adatbázishoz
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             ResultSet rs = stmt.executeQuery(sql)) { //SQL query indítása
 
-            while (rs.next()) {
-                Auto auto = new Auto(
+            while (rs.next()) { //Addig megy a ciklus, amíg talál rekordot az Autok táblában
+                Auto auto = new Auto( //elhelyezzük egy auto nevű objetkumban a tábla aktuális rekordjának megfelelő mezőit
                         rs.getInt("id"),
                         rs.getString("tipus"),
                         rs.getString("rendszam"),
@@ -53,16 +54,16 @@ public class AutoDAO {
                         (Boolean) rs.getObject("billent"),
                         rs.getBoolean("elerheto")
                 );
-                autok.add(auto);
+                autok.add(auto); //az auto objektumot - a tábla mezőinek értékeivel - betesszük az Autok listába
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //kivételkezelés, hiba esetére
         }
 
         return autok;
     }
-    public void torolAuto(int autoId) {
+    public void torolAuto(int autoId) { //Autok táblából redkord törlése
         String sql = "DELETE FROM autok WHERE id = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -81,6 +82,46 @@ public class AutoDAO {
             e.printStackTrace();
         }
     }
+
+    public List<String> listazEgyediTipusokat() {
+        //Egyedi típusok listázása, a főképernyőn lévő autótípusok combo box-hoz szükséges, hogy minden táblában szereplő típus csak egyszer szerepeljen
+
+        List<String> tipusok = new ArrayList<>();
+
+        String sql = "SELECT DISTINCT tipus FROM autok ORDER BY tipus";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                tipusok.add(rs.getString("tipus"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tipusok;
+    }
+
+    public boolean vanIlyenRendszam(String rendszam) {
+        //Új autó felvitelénél ellenőrizzük, hogy a megadott rendszám nem létezik-e már a táblában
+        String sql = "SELECT 1 FROM autok WHERE rendszam = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, rendszam);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next(); // van ilyen rendszám
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
 
 }
